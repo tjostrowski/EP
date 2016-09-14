@@ -29,6 +29,7 @@ public class ProductManagerDSImpl implements ProductManager {
 
 	@Override
 	public List<Product> getProductsList() {
+		products.clear();
 		try {
 			Connection conn = dataSource.getConnection();
 			Statement st = conn.createStatement();
