@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import pl.epoint.otto.servletsample.database.Product;
 import pl.epoint.otto.servletsample.database.ProductManager;
 import pl.epoint.otto.servletsample.database.ProductManagerDSImpl;
-import pl.epoint.otto.servletsample.database.ProductManagerJDBCImpl;
 import pl.epoint.otto.servletsample.helper.HtmlBuilder;
 import pl.epoint.otto.servletsample.helper.Link;
 import pl.epoint.otto.servletsample.helper.TableBuilder;

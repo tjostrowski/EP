@@ -1,6 +1,7 @@
 package pl.epoint.otto.servletsample.filters;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 
 import javax.servlet.Filter;
@@ -10,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import pl.epoint.otto.servletsample.helper.FormBuilder;
 
@@ -32,8 +34,12 @@ public class LoginFilter implements Filter {
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
 			throws IOException, ServletException {
 		HttpServletRequest httpReq = (HttpServletRequest) req;
+		HttpServletResponse httpResp = (HttpServletResponse) resp;
+		
 		final String userId = (String) httpReq.getSession().getAttribute(USER_ID);
 		final String action = httpReq.getParameter(ACTION);
+		
+		setEncodings(httpReq, httpResp);
 		
 		if (ACTION_LOGOUT.equals(action)) {
 			httpReq.getSession().invalidate();
@@ -71,5 +77,14 @@ public class LoginFilter implements Filter {
 			.withSubmit("Login")
 			.finish()
 			.build();				
+	}
+	
+	private void setEncodings(HttpServletRequest httpReq, HttpServletResponse httpResp) {
+		try {
+			httpResp.setContentType("text/html;charset=UTF-8");
+			httpReq.setCharacterEncoding("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}		
 	}
 }

@@ -11,11 +11,13 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import pl.epoint.otto.servletsample.helper.DBHelper;
+
 public class ProductManagerDSImpl implements ProductManager {
 	public static ProductManager INSTANCE = new ProductManagerDSImpl();
 	
 	private DataSource dataSource;	
-	private List<Product> products = new ArrayList<>();
+	private List<Product> products = null;
 	
 	public ProductManagerDSImpl() {
 		try {
@@ -29,25 +31,19 @@ public class ProductManagerDSImpl implements ProductManager {
 
 	@Override
 	public List<Product> getProductsList() {
-		products.clear();
-		try {
-			Connection conn = dataSource.getConnection();
-			Statement st = conn.createStatement();
-			String sql = "SELECT * FROM product";
-			ResultSet rs = st.executeQuery(sql);
-			while (rs.next()) {
-				int productId = rs.getInt("id");
-				String name = rs.getString("name");
-				long price = rs.getLong("price");
-
-				products.add(new Product(productId, name, price));
+		if (products == null) {
+			products = new ArrayList<>();
+			try {
+				Connection conn = dataSource.getConnection();
+				DBHelper.fetchProductsFromDB(conn, products);
+				conn.close();
+				return products;
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
 			}
-			conn.close();
-			return products;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
 		}
+		return products;
 	}
 
 	@Override
@@ -64,5 +60,5 @@ public class ProductManagerDSImpl implements ProductManager {
 	@Override
 	public void doCleanup() {
 		products.clear();		
-	}
+	}	
 }

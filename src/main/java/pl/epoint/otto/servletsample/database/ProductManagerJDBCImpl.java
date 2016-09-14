@@ -2,21 +2,17 @@ package pl.epoint.otto.servletsample.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import javax.naming.InitialContext;
-import javax.sql.DataSource;
+import pl.epoint.otto.servletsample.helper.DBHelper;
 
 public class ProductManagerJDBCImpl implements ProductManager {
 	public static ProductManager INSTANCE = new ProductManagerJDBCImpl();
 
 	private Connection conn;
-	private List<Product> products = new ArrayList<>();
+	private List<Product> products = null;
 
 	public ProductManagerJDBCImpl() {
 		conn = openConnection();
@@ -24,22 +20,11 @@ public class ProductManagerJDBCImpl implements ProductManager {
 
 	@Override
 	public List<Product> getProductsList() {
-		try {
-			Statement st = conn.createStatement();
-			String sql = "SELECT * FROM product";
-			ResultSet rs = st.executeQuery(sql);
-			while (rs.next()) {
-				int productId = rs.getInt("id");
-				String name = rs.getString("name");
-				long price = rs.getLong("price");
-
-				products.add(new Product(productId, name, price));
-			}
-			return products;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
+		if (products == null) {
+			products = new ArrayList<>();
+			DBHelper.fetchProductsFromDB(conn, products);
 		}
+		return products;
 	}
 
 	@Override
@@ -85,5 +70,4 @@ public class ProductManagerJDBCImpl implements ProductManager {
 			throw new RuntimeException(e);
 		}
 	}
-
 }
