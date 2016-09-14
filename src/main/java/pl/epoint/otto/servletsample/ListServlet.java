@@ -17,6 +17,14 @@ import pl.epoint.otto.servletsample.helper.Link;
 import pl.epoint.otto.servletsample.helper.TableBuilder;
 
 public class ListServlet extends HttpServlet {
+	
+	private int visitCounter;
+	
+	@Override
+	public void init() throws ServletException {
+		this.visitCounter = 0;
+		super.init();
+	}
 		
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -39,6 +47,9 @@ public class ListServlet extends HttpServlet {
 		final Writer writer = resp.getWriter(); 
 		writer.append(html);		
 		writer.append(SiteAppenders.renderLogout());
+		
+		visitCounter++;
+		writer.append(SiteAppenders.renderCounters(visitCounter, req));
 	}	
 	
 	private void testMe(HttpServletRequest req, HttpServletResponse resp) throws IOException {

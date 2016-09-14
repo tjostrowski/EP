@@ -25,6 +25,14 @@ public class EditServlet extends HttpServlet {
 	private static final String ACTION_SAVE_PRODUCT = "save_product";
 	
 	private ProductValidator validator = new ProductValidator();
+	
+	private int visitCounter;
+	
+	@Override
+	public void init() throws ServletException {
+		this.visitCounter = 0;
+		super.init();
+	}
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -60,6 +68,9 @@ public class EditServlet extends HttpServlet {
 		writer.append(renderForm(product));
 		writer.append(Link.of("../list", "Cancel"));
 		writer.append(SiteAppenders.renderLogout());
+		
+		visitCounter++;
+		writer.append(SiteAppenders.renderCounters(visitCounter, req));
 	}	
 	
 	@Override
