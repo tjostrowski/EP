@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-web>
+	<context-root>/servlet_sample</context-root>
+	<virtual-host>localhost</virtual-host>
+</jboss-web>
