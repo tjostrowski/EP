@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources>
+	<local-tx-datasource>
+	  <jndi-name>jdbc/FirstappDS</jndi-name>
+	  <connection-url>jdbc:postgresql://localhost:5432/firstapp</connection-url>
+	  <driver-class>org.postgresql.Driver</driver-class>
+	  <user-name>firstapp</user-name>
+	  <password>firstapp</password>
+<!--	  <valid-connection-checker-class-name>org.jboss.resource.adapter.jdbc.vendor.MySQLValidConnectionChecker</valid-connection-checker-class-name> -->
+	  <metadata>
+	<type-mapping>PostgreSQL</type-mapping>
+	</metadata>
+	</local-tx-datasource>
+</datasources>
+

@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import pl.epoint.otto.servletsample.database.Product;
 import pl.epoint.otto.servletsample.database.ProductManager;
-import pl.epoint.otto.servletsample.database.ProductManagerJDBCImpl;
+import pl.epoint.otto.servletsample.database.ProductManagerDSImpl;
 import pl.epoint.otto.servletsample.helper.FormBuilder;
 import pl.epoint.otto.servletsample.helper.HtmlBuilder;
 import pl.epoint.otto.servletsample.helper.Link;
@@ -34,7 +34,7 @@ public class EditServlet extends HttpServlet {
 	@Override
 	public void init() throws ServletException {
 		this.visitCounter = 0;
-		this.productManager = ProductManagerJDBCImpl.INSTANCE; 
+		this.productManager = ProductManagerDSImpl.INSTANCE; 
 		super.init();
 	}
 

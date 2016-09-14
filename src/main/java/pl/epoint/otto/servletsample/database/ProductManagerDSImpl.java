@@ -1,30 +1,36 @@
 package pl.epoint.otto.servletsample.database;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-public class ProductManagerJDBCImpl implements ProductManager {
-	public static ProductManager INSTANCE = new ProductManagerJDBCImpl();
-
-	private Connection conn;
+public class ProductManagerDSImpl implements ProductManager {
+	public static ProductManager INSTANCE = new ProductManagerDSImpl();
+	
+	private DataSource dataSource;	
 	private List<Product> products = new ArrayList<>();
-
-	public ProductManagerJDBCImpl() {
-		conn = openConnection();
+	
+	public ProductManagerDSImpl() {
+		try {
+			InitialContext ctx = new InitialContext();
+			dataSource = (DataSource) ctx.lookup("java:jdbc/FirstappDS");			
+		} catch (NamingException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}		
 	}
 
 	@Override
 	public List<Product> getProductsList() {
 		try {
+			Connection conn = dataSource.getConnection();
 			Statement st = conn.createStatement();
 			String sql = "SELECT * FROM product";
 			ResultSet rs = st.executeQuery(sql);
@@ -35,6 +41,7 @@ public class ProductManagerJDBCImpl implements ProductManager {
 
 				products.add(new Product(productId, name, price));
 			}
+			conn.close();
 			return products;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -55,35 +62,6 @@ public class ProductManagerJDBCImpl implements ProductManager {
 
 	@Override
 	public void doCleanup() {
-		products.clear();
-		closeConnection(conn);
+		products.clear();		
 	}
-
-	private Connection openConnection() {
-		try {			
-			Properties properties = new Properties();
-			properties.put("user", "firstapp");
-			properties.put("password", "firstapp");
-			properties.put("characterEncoding", "ISO-8859-1");
-			properties.put("useUnicode", "true");
-			String url = "jdbc:postgresql://localhost:5432/firstapp";
-
-			Class.forName("org.postgresql.Driver").newInstance();
-			Connection c = DriverManager.getConnection(url, properties);
-			return c;
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	private void closeConnection(Connection c) {
-		try {
-			if (c != null) {
-				c.close();
-			}
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
 }
