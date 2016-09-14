@@ -31,6 +31,7 @@ dependencies {
     compile 'org.slf4j:slf4j-api:1.7.21'
     
     providedCompile "javax.servlet:javax.servlet-api:3.1.0"
+    compile "org.postgresql:postgresql:9.4-1201-jdbc41"
     
     testCompile 'junit:junit:4.12'    
 }

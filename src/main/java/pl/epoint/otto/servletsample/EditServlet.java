@@ -10,7 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import pl.epoint.otto.servletsample.database.Product;
-import pl.epoint.otto.servletsample.database.Products;
+import pl.epoint.otto.servletsample.database.ProductManager;
+import pl.epoint.otto.servletsample.database.ProductManagerJDBCImpl;
 import pl.epoint.otto.servletsample.helper.FormBuilder;
 import pl.epoint.otto.servletsample.helper.HtmlBuilder;
 import pl.epoint.otto.servletsample.helper.Link;
@@ -28,16 +29,19 @@ public class EditServlet extends HttpServlet {
 	
 	private int visitCounter;
 	
+	private ProductManager productManager;
+	
 	@Override
 	public void init() throws ServletException {
 		this.visitCounter = 0;
+		this.productManager = ProductManagerJDBCImpl.INSTANCE; 
 		super.init();
 	}
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		final Integer productId = getProductId(req);
-		final Product product = Products.getProductById(productId);
+		final Product product = productManager.getProductById(productId);
 		final Writer writer = resp.getWriter();
 		
 		final String action = req.getParameter(ACTION);

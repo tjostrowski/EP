@@ -2,7 +2,6 @@ package pl.epoint.otto.servletsample;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -11,18 +10,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import pl.epoint.otto.servletsample.database.Product;
-import pl.epoint.otto.servletsample.database.Products;
+import pl.epoint.otto.servletsample.database.ProductManager;
+import pl.epoint.otto.servletsample.database.ProductManagerJDBCImpl;
 import pl.epoint.otto.servletsample.helper.HtmlBuilder;
 import pl.epoint.otto.servletsample.helper.Link;
 import pl.epoint.otto.servletsample.helper.TableBuilder;
 
 public class ListServlet extends HttpServlet {
 	
+	private ProductManager productManager;
 	private int visitCounter;
 	
 	@Override
 	public void init() throws ServletException {
 		this.visitCounter = 0;
+		this.productManager = ProductManagerJDBCImpl.INSTANCE;
 		super.init();
 	}
 		
@@ -32,7 +34,7 @@ public class ListServlet extends HttpServlet {
 		
 		TableBuilder tableBuilder = new TableBuilder();
 		tableBuilder.addHeader("Product Id", "Name", "Price");
-		List<Product> products = Products.getProductsList();
+		List<Product> products = productManager.getProductsList();
 		for (Product product : products) {
 			tableBuilder.addRow(String.valueOf(product.getId()), 
 					Link.of("edit/" + product.getId(), product.getName()), 

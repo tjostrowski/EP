@@ -3,21 +3,24 @@ package pl.epoint.otto.servletsample.database;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Products {
+public class ProductManagerMemoryImpl implements ProductManager {
+	public static ProductManager INSTANCE = new ProductManagerMemoryImpl();
 	
-	private static List<Product> products = new ArrayList<>();
+	List<Product> products = new ArrayList<>();
 	
-	static {
+	{
 		products.add(new Product(1, "cake", 100L));
 		products.add(new Product(2, "butter", 200L));
 		products.add(new Product(3, "bread", 300L));
 	}
-	
-	public static List<Product> getProductsList() {
+
+	@Override
+	public List<Product> getProductsList() {
 		return products;
-	}	
-	
-	public static Product getProductById(Integer productId) {
+	}
+
+	@Override
+	public Product getProductById(int productId) {
 		// naive
 		for (Product p : products) {
 			if (p.getId().equals(productId)) {
@@ -25,5 +28,11 @@ public class Products {
 			}			
 		}
 		return null;
-	}	
+	}
+
+	@Override
+	public void doCleanup() {
+		products.clear();		
+	}
+
 }
