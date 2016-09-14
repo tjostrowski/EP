@@ -49,7 +49,7 @@ public class ProductManagerJDBCImpl implements ProductManager {
 			Properties properties = new Properties();
 			properties.put("user", "firstapp");
 			properties.put("password", "firstapp");
-			properties.put("characterEncoding", "ISO-8859-1");
+			properties.put("characterEncoding", "ISO-8859-2");
 			properties.put("useUnicode", "true");
 			String url = "jdbc:postgresql://localhost:5432/firstapp";
 

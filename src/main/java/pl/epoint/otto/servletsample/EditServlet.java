@@ -54,7 +54,7 @@ public class EditServlet extends HttpServlet {
 			if (!errMsg.equals("")) {
 				writer.append("<h4>" + errMsg + "</h4>");
 				writer.append(renderForm(product));
-				writer.append(Link.of("../list", "Cancel"));
+				renderRemaining(req, resp, product);
 				return;
 			}						
 			
@@ -68,18 +68,23 @@ public class EditServlet extends HttpServlet {
 			resp.getWriter().append( new HtmlBuilder().withBody("No matching product").build() );
 			return;
 		}
-												
-		writer.append(renderForm(product));
-		writer.append(Link.of("../list", "Cancel"));
-		writer.append(SiteAppenders.renderLogout());
-		
-		visitCounter++;
-		writer.append(SiteAppenders.renderCounters(visitCounter, req));
+				
+		writer.append(renderForm(product));											
+		renderRemaining(req, resp, product);
 	}	
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {		
 		doGet(req, resp);
+	}
+	
+	private void renderRemaining(HttpServletRequest req, HttpServletResponse resp, Product product) throws IOException {
+		Writer writer = resp.getWriter();		
+		writer.append(Link.of("../list", "Cancel"));
+		writer.append(SiteAppenders.renderLogout());
+		
+		visitCounter++;
+		writer.append(SiteAppenders.renderCounters(visitCounter, req));		
 	}
 	
 	private String renderForm(Product product) {
